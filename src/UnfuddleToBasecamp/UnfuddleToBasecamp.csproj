@@ -64,6 +64,9 @@
     <Compile Include="UnfuddleChangesetHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="rename-Web.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
