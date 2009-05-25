@@ -3,3 +3,4 @@ bin
 _ReSharper.*
 *.user
 *.suo
+Web.config
