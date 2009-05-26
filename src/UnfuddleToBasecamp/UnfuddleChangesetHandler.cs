@@ -10,7 +10,6 @@ namespace UnfuddleToBasecamp
 {
 	public class UnfuddleChangesetHandler : IHttpHandler
 	{
-		#region IHttpHandler Members
 
 		public bool IsReusable
 		{
@@ -19,18 +18,16 @@ namespace UnfuddleToBasecamp
 
 		public void ProcessRequest(HttpContext context)
 		{
-			HttpResponse response = context.Response;
 			HttpRequest request = context.Request;
 			BaseCampSettings bc = null; //TODO
 
-			Changeset changeset = GetIncomingChangeset(request);
+			Changeset changeset = GetIncomingChangeset(request.InputStream);
 			BaseCampMessage message = CreateBasecampMessage(changeset, bc);
-			PostNewMessageToBasecamp(response, message, bc);
+			PostNewMessageToBasecamp(message, bc);
 		}
 
-		#endregion
 
-		private Changeset GetIncomingChangeset(HttpRequest request)
+		public static Changeset GetIncomingChangeset(Stream postBodyStream)
 		{
 			/* changeset xml sample
 			<changeset>
@@ -54,8 +51,8 @@ namespace UnfuddleToBasecamp
 			  <revision> </revision>
 			</changeset>
 			 */
-			string xml = null;
-			using (var sr = new StreamReader(request.InputStream))
+			string xml;
+			using(var sr = new StreamReader(postBodyStream))
 			{
 				xml = sr.ReadToEnd();
 			}
@@ -70,7 +67,7 @@ namespace UnfuddleToBasecamp
 
 			return new Changeset
 				{
-					Author = cs.SelectSingleNode("changeset/author-name").InnerText,
+					Author = cs.SelectSingleNode("changeset/committer-name").InnerText,
 					Message = cs.SelectSingleNode("changeset/message").InnerText,
 					Repository = cs.SelectSingleNode("changeset/repository-id").InnerText,
 					Revision = cs.SelectSingleNode("changeset/revision").InnerText
@@ -78,7 +75,7 @@ namespace UnfuddleToBasecamp
 		}
 
 
-		private BaseCampMessage CreateBasecampMessage(Changeset changeset, BaseCampSettings settings)
+		public static BaseCampMessage CreateBasecampMessage(Changeset changeset, BaseCampSettings settings)
 		{
 			/*
 			POST /projects/#{project_id}/posts.xml
@@ -105,28 +102,12 @@ namespace UnfuddleToBasecamp
 				};
 		}
 
-		private void PostNewMessageToBasecamp(HttpResponse response, BaseCampMessage message, BaseCampSettings settings)
+		public static void PostNewMessageToBasecamp(BaseCampMessage message, BaseCampSettings settings)
 		{
-			string url = string.Format("{0}/projects/{1}/posts.xml",
-			                           settings.MainUrl,
-			                           settings.ProjectId);
+			string url = settings.NewPostUrl;
 
-			var msg = new XmlDocument();
-			msg.LoadXml(
-				@"<request>
-				  <post>
-					<category-id></category-id>
-					<title></title>
-					<body></body>
-				  </post>
-				</request>"
-				);
-
-			msg.SelectSingleNode("request/category-id").InnerText = settings.CategoryId;
-			msg.SelectSingleNode("request/title").InnerText = message.Title;
-			msg.SelectSingleNode("request/body").InnerText = message.Body;
-
-			GetResponseBodyFromUrlViaPost(url, msg.OuterXml, "application/xml");
+			var messageXml = message.ToXml(settings);
+			GetResponseBodyFromUrlViaPost(url, messageXml, "application/xml");
 		}
 
 		private static string GetResponseBodyFromUrlViaPost(string url, string postBody, string contentType)

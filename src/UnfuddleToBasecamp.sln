@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnfuddleToBasecamp", "UnfuddleToBasecamp\UnfuddleToBasecamp.csproj", "{919DA553-5F3B-4ED7-B972-581A7C59469F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "U2bcUnitTests", "U2bcUnitTests\U2bcUnitTests.csproj", "{137E8F9C-1945-44A1-9F75-185C6ED281DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{919DA553-5F3B-4ED7-B972-581A7C59469F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{919DA553-5F3B-4ED7-B972-581A7C59469F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{919DA553-5F3B-4ED7-B972-581A7C59469F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{137E8F9C-1945-44A1-9F75-185C6ED281DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{137E8F9C-1945-44A1-9F75-185C6ED281DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{137E8F9C-1945-44A1-9F75-185C6ED281DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{137E8F9C-1945-44A1-9F75-185C6ED281DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
